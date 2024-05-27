@@ -1,0 +1,4 @@
+*
+!sse-server*.py
+!sse-client*.html
+!.gitignore
