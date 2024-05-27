@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real-time Data Chart with SSE driven server</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>  </head>
+<body>
+  <h1>Real-time Data Chart with SSE driven server</h1>
+  <canvas id="dataChart"></canvas>
+
+  <script>
+    const chart = new Chart(document.getElementById('dataChart'), {
+      type: 'line',  // Choose a chart type (line, bar, etc.)
+      data: {
+        labels: [],  // Stores timestamps for data points (basically, x axis)
+        datasets: [{
+          label: 'Data (Signal comming from data stream)',
+          data: [],  // Stores received data values (basically, y axis)
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',  // Optional: background color for chart
+          borderColor: 'rgba(243, 156, 18, 1)',  // Optional: border color for chart
+          fill: false  // Optional: don't fill the area below the line
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true  // Start y-axis from 0
+            }
+          }]
+        }
+      }
+    });
+
+    const eventSource = new EventSource("http://localhost:8999/data");  // Replace with your server endpoint
+    eventSource.onmessage = (event) => {
+      const data = parseFloat(event.data);  // Parse data as a float number
+      chart.data.labels.push(new Date().toLocaleTimeString());  // Add timestamp to the labels array (x axis)
+      chart.data.datasets[0].data.push(data); // Add the number to the y axis, in the data array.
+      chart.update();  // Update the chart with new data
+    };
+  </script>
+</body>
+</html>
