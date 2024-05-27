@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SSE Data Logger</title>
+</head>
+<body>
+  <h1>SSE Data Log</h1>
+  <ul id="data-list"></ul>
+  <script>
+    const eventSource = new EventSource("http://localhost:8999/data");  // Replace with your server endpoint
+    const dataList = document.getElementById("data-list");
+
+    eventSource.onmessage = (event) => {
+      const data = event.data;
+      const listItem = document.createElement("li");
+      listItem.textContent = data;
+      dataList.appendChild(listItem);
+    };
+  </script>
+</body>
+</html>
